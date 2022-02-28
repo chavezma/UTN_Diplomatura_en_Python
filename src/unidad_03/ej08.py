@@ -23,6 +23,7 @@ def salir():
     print("Gracias por usar nuestro sistema.")
     input("Presione cualquier tecla para finalizar...")
     print("")
+    clearConsole()
 
 
 def clearConsole():
@@ -102,10 +103,10 @@ def modificar():
                 f"producto elegido [{compra[idx][0]}] [{compra[idx][1]}] [{compra[idx][2]}]" # noqa
             )
             encargo = input(
-                "Ingrese los nuevos valores producto-cantidad-precio (separados por guion): " # noqa
+                "Ingrese los nuevos valores cantidad-precio (separados por guion): " # noqa
             )
-            producto, cantidad, precio = encargo.split("-")
-            compra[idx] = (producto, cantidad, precio)
+            cantidad, precio = encargo.split("-")
+            compra[idx] = (prod, cantidad, precio)
 
             print(f"se modificó el {prod} de la posicion {idx}.")
             print(
