@@ -67,7 +67,7 @@ Por ultimo, se incorpora la utilización de funciones, que permiten la modulariz
 
 Para ver los ejercicios de esta unidad ver [aquí](src/unidad_03/README.md)
 
-## Unidad 3 - Funciones y asignación de argumentos
+## Unidad 4 - Funciones y asignación de argumentos
 
 En esta unidad se se abordaron los siguientes temas...
 
@@ -76,3 +76,8 @@ En esta unidad se se abordaron los siguientes temas...
 3. Asignación de argumentos
 4. Función lambda
 5. Función recursividad
+
+Se definen las diferencias entre variables locales y globales, y como estan se relacion entre la comunicación de diferentes funciones. 
+Se habla sobre las funciones y formas de pasar argumentos. Formas especiales de funciones como las lamdba (o anónimas ¿quizás?) y las funciones recursivas (que se llaman a si mismas)
+
+Para ver los ejercicios puedes entrar [aquí](src/unidad_04/README.md)
