@@ -6,9 +6,12 @@ En este repositorio, pretendo ir realizando la ejercitación y trabajos práctic
 
 ## Ejercitacion
 
+# Modulo 1
+
 ## Unidad 1
 
 En esta unidad se se abordaron los siguientes temas...
+
 1. Instalación - Windows
 2. Instalación - Linux y Mac
 3. Extensiones vsc
@@ -24,7 +27,7 @@ En general son comentarios sobre la instalación del entorno de python y la util
 Luego se abordan conceptos de variables y asignación de valores, y el primer acercamiento a la utilización de un modulo y la detección de parametros desde una terminal/consola.
 
 Por ultimo se conversa sobre algunas de las buenas prácticas de desarrollo (pep8) para ir incorporando a medida que avanzan las clases y se resuelven los ejercicios.
- 
+
 Para ver los ejercicios revisa [aquí](src/unidad_01/README.md)
 
 ## Unidad 2 - Tipos de Datos I
@@ -77,7 +80,22 @@ En esta unidad se se abordaron los siguientes temas...
 4. Función lambda
 5. Función recursividad
 
-Se definen las diferencias entre variables locales y globales, y como estan se relacion entre la comunicación de diferentes funciones. 
+Se definen las diferencias entre variables locales y globales, y como estan se relacion entre la comunicación de diferentes funciones.
 Se habla sobre las funciones y formas de pasar argumentos. Formas especiales de funciones como las lamdba (o anónimas ¿quizás?) y las funciones recursivas (que se llaman a si mismas)
 
 Para ver los ejercicios puedes entrar [aquí](src/unidad_04/README.md)
+
+# Modulo 2
+
+## Unidad 1 - GUI - Uso de Interfaz gráfica
+
+1. Introducción
+2. Maquetación
+   2.1. Treeview
+   2.2. Widgets
+   2.3. Menú
+   2.4. Lanzar eventos
+
+Se comienza a utilizar la libreria "tkinter", para empezar a utilizar los conceptos anteriores como variables y funciones para generar ventanas, administrar eventos y ejecutar acciones.
+
+Para ver los ejercicios puedes entrar [aquí](src/unidad_05/README.md)
