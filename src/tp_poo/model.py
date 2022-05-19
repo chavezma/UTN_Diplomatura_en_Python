@@ -1,5 +1,7 @@
 import sqlite3
 import re
+import traceback
+import sys
 
 # ##############################################
 # MODELO
@@ -28,35 +30,47 @@ class Model():
         self.con.commit()
 
     def getProductos(self,):
-        sql = "SELECT * FROM productos ORDER BY id DESC"
-        self.con = self.conexion()
-        cursor = self.con.cursor()
-        datos = cursor.execute(sql)
+        try:
+            sql = "SELECT * FROM productos ORDER BY id DESC"
+            self.con = self.conexion()
+            cursor = self.con.cursor()
+            datos = cursor.execute(sql)
+        except sqlite3.Error as error:
+            message = "sqllite: Ocurrió un error al intentar seleccionar \n"
+            message += "Exception class is: " + error.__class__ + "\n"
+            message += "Exception is " + error.args + "\n"
+            message += 'Printing detailed SQLite exception traceback: ' + "\n"
+            exc_type, exc_value, exc_tb = sys.exc_info()
+            message += traceback.format_exception(exc_type, exc_value, exc_tb)
+            raise Exception('Error: ', message)
+        finally:
+            self.con.commit()
 
         return datos.fetchall()
 
     def alta(self, producto, cantidad, precio):
-        print("modelo.alta")
         cadena = producto
         patron = "^[A-Za-záéíóú]*$"  # regex para el campo cadena
 
         if (not re.match(patron, cadena)):
-            print("error en campo producto")
             return False
 
-        print("modelo.alta.sql")
-        print(producto, cantidad, precio)
         try:
             cursor = self.con.cursor()
             data = (producto, cantidad, precio)
             sql = "INSERT INTO productos(producto, cantidad, precio) VALUES(?, ?, ?)"
             cursor.execute(sql, data)
-        except Exception as err:
-            print('Alta Failed: %s\nError: %s' % (sql, str(err)))
+        except sqlite3.Error as error:
+            message = "sqllite: Ocurrió un error al intentar insertar \n"
+            message += "Exception class is: " + error.__class__ + "\n"
+            message += "Exception is " + error.args + "\n"
+            message += 'Printing detailed SQLite exception traceback: ' + "\n"
+            exc_type, exc_value, exc_tb = sys.exc_info()
+            message += traceback.format_exception(exc_type, exc_value, exc_tb)
+            raise Exception('Error: ', message)
         finally:
             self.con.commit()
 
-        print("modelo.alta.fin")
         return True
 
     def borrar(self, id):
@@ -66,8 +80,14 @@ class Model():
             data = (el_id,)
             sql = "DELETE from productos where id = ?;"
             cursor.execute(sql, data)
-        except Exception as err:
-            print('Borrar Failed: %s\nError: %s' % (sql, str(err)))
+        except sqlite3.Error as error:
+            message = "sqllite: Ocurrió un error al intentar borrar \n"
+            message += "Exception class is: " + error.__class__ + "\n"
+            message += "Exception is " + error.args + "\n"
+            message += 'Printing detailed SQLite exception traceback: ' + "\n"
+            exc_type, exc_value, exc_tb = sys.exc_info()
+            message += traceback.format_exception(exc_type, exc_value, exc_tb)
+            raise Exception('Error: ', message)
         finally:
             self.con.commit()
 
@@ -80,8 +100,14 @@ class Model():
             data = (producto, cantidad, precio, prod_id)
             sql = "UPDATE productos SET producto=?, cantidad=?, precio=? WHERE id=?;"
             cursor.execute(sql, data)
-        except Exception as err:
-            print('Actualizar Failed: %s\nError: %s' % (sql, str(err)))
+        except sqlite3.Error as error:
+            message = "sqllite: Ocurrió un error al intentar actualizar \n"
+            message += "Exception class is: " + error.__class__ + "\n"
+            message += "Exception is " + error.args + "\n"
+            message += 'Printing detailed SQLite exception traceback: ' + "\n"
+            exc_type, exc_value, exc_tb = sys.exc_info()
+            message += traceback.format_exception(exc_type, exc_value, exc_tb)
+            raise Exception('Error: ', message)
         finally:
             self.con.commit()
 

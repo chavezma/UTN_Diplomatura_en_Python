@@ -1,7 +1,3 @@
-# from tkinter import *
-# from tkinter.messagebox import *
-# from tkinter import ttk, Tk, Label, Button, StringVar, DoubleVar, Entry
-
 import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import showerror, showinfo, askyesno
@@ -13,7 +9,7 @@ import tkinter.font as tkFont
 class View(tk.Tk):
     def __init__(self, controller):
         super().__init__()
-
+        self.resizable(0, 0)
         self.controller = controller
         self.title("Esto no es una copia")
         self.titulo = tk.Label(self, text="Ingrese sus datos", bg="DarkOrchid3", fg="thistle1", height=1, width=60)
@@ -27,14 +23,13 @@ class View(tk.Tk):
         self.precio.grid(row=3, column=1, sticky=tk.W)
 
         # Defino variables para tomar valores de campos de entrada
-        self.a_val, self.b_val, self.c_val = tk.StringVar(), tk.DoubleVar(), tk.DoubleVar()
-        w_ancho = 20
-
-        self.entrada1 = ttk.Entry(self, textvariable=self.a_val, width=w_ancho)
+        self.var_nombre, self.var_cantidad, self.var_precio = tk.StringVar(), tk.IntVar(), tk.DoubleVar()
+        
+        self.entrada1 = ttk.Entry(self, textvariable=self.var_nombre, width=20)
         self.entrada1.grid(row=1, column=2)
-        self.entrada2 = ttk.Entry(self, textvariable=self.b_val, width=w_ancho)
+        self.entrada2 = ttk.Entry(self, textvariable=self.var_cantidad, width=20)
         self.entrada2.grid(row=2, column=2)
-        self.entrada3 = ttk.Entry(self, textvariable=self.c_val, width=w_ancho)
+        self.entrada3 = ttk.Entry(self, textvariable=self.var_precio, width=20)
         self.entrada3.grid(row=3, column=2)
 
         # --------------------------------------------------
@@ -77,14 +72,12 @@ class View(tk.Tk):
         resultado = self.controller.getProductos()
 
         for fila in resultado:
-            print(fila)
             self.tree.insert("", 0, text=fila[0], values=(fila[1], fila[2], fila[3]))
 
     def alta(self, ):
-        print("Alta de Producto estamos.")
-        producto = self.a_val.get()
-        cantidad = self.b_val.get()
-        precio = self.c_val.get()
+        producto = self.var_nombre.get()
+        cantidad = self.var_cantidad.get()
+        precio = self.var_precio.get()
 
         if not self.controller.alta(producto, cantidad, precio):
             showerror("Alta de Producto", "Error al guardar producto...")
@@ -92,9 +85,9 @@ class View(tk.Tk):
 
         showinfo("Alta de Producto", "El producto ha sido dado de alta exitosamente.")
 
-        self.a_val.set("")
-        self.b_val.set("")
-        self.c_val.set("")
+        self.var_nombre.set("")
+        self.var_cantidad.set("")
+        self.var_precio.set("")
         self.reiniciar_treeview()
 
     def borrar(self,):
@@ -105,8 +98,6 @@ class View(tk.Tk):
             return
 
         prod_id = self.tree.item(item)["text"]
-
-        print("prod_id: ", prod_id)
 
         if askyesno("Borrar Producto", "¿Está seguro que desea borrar el producto?"):
             self.controller.borrar(prod_id)
@@ -147,7 +138,7 @@ class ActualizarProducto(tk.Toplevel):
         self.protocol("WM_DELETE_WINDOW", self.fn_antes_cerrar)
 
         self.var_nombre = tk.StringVar()
-        self.var_cantidad = tk.DoubleVar()
+        self.var_cantidad = tk.IntVar()
         self.var_precio = tk.DoubleVar()
 
         self.var_nombre.set(prod_nombre)
@@ -193,9 +184,7 @@ class ActualizarProducto(tk.Toplevel):
         self.destroy()
 
     def actualizar_producto(self,):
-        print("actualizar_producto: ")
         el_prod = self.master.tree.focus()
-        print("actualizar_producto el_prod: ", el_prod)
 
         if askyesno("Actualizar Proyecto", "¿Está seguro que desea actualizar el producto seleccionado?"):
             prod_id = self.master.tree.item(el_prod)["text"]
@@ -203,4 +192,3 @@ class ActualizarProducto(tk.Toplevel):
             showinfo("Actualizar Proyecto", "El proyecto ha sido actualizado correctamente.")
             self.master.tree.item(el_prod, values=(self.var_nombre.get(), self.var_cantidad.get(), self.var_precio.get()))
             self.destroy()
-
