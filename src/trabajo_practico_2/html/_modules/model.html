@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>model &mdash; documentación de App_Proyecto - 1.0.0</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> App_Proyecto
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../controller.html">controller module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../database.html">database module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model.html">model module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../view.html">view module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">App_Proyecto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Código de módulo</a> &raquo;</li>
+      <li>model</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código fuente para model</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">database</span> <span class="kn">import</span> <span class="n">Database</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<div class="viewcode-block" id="Producto"><a class="viewcode-back" href="../model.html#model.Producto">[documentos]</a><span class="k">class</span> <span class="nc">Producto</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Clase que representa un producto del modelo de datos</span>
+
+<span class="sd">    :param nombre: Nombre que identifica el producto</span>
+<span class="sd">    :type nombre: str</span>
+<span class="sd">    :param cantidad: Cantidad a agregar de ese producto</span>
+<span class="sd">    :type cantidad: int</span>
+<span class="sd">    :param precio: Precio del producto a agregar</span>
+<span class="sd">    :type precio: float</span>
+<span class="sd">    :param id: Id del producto en la base de datos, por defecto None</span>
+<span class="sd">    :type id: int, optional</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">nombre</span><span class="p">,</span>
+        <span class="n">cantidad</span><span class="p">,</span>
+        <span class="n">precio</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Metodo Constructor&quot;&quot;&quot;</span>
+        <span class="n">patron</span> <span class="o">=</span> <span class="s2">&quot;^[A-Za-záéíóú]*$&quot;</span>  <span class="c1"># regex para el campo cadena</span>
+
+        <span class="k">if</span> <span class="n">nombre</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">nombre</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error: Debe ingresar un nombre para el producto&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron</span><span class="p">,</span> <span class="n">nombre</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;Error: El nombre del producto es inválido. </span><span class="se">\n</span><span class="s2">Solo puedo contener letras.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cantidad</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cantidad</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error: La cantidad debe ser un número entero válido&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cantidad</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error: La cantidad debe ser un número positivo&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">precio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">precio</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error: La cantidad debe ser un número valido&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">precio</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error: El precio debe ser un número mayor que cero&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">nombre</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cantidad</span> <span class="o">=</span> <span class="n">cantidad</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">precio</span> <span class="o">=</span> <span class="n">precio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__db</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Producto.alta"><a class="viewcode-back" href="../model.html#model.Producto.alta">[documentos]</a>    <span class="k">def</span> <span class="nf">alta</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Método que resuelve el alta del producto en la base de datos.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__db</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Producto.borrar"><a class="viewcode-back" href="../model.html#model.Producto.borrar">[documentos]</a>    <span class="k">def</span> <span class="nf">borrar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Método que resuelve la eliminación del producto en la base de datos.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__db</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Producto.actualizar"><a class="viewcode-back" href="../model.html#model.Producto.actualizar">[documentos]</a>    <span class="k">def</span> <span class="nf">actualizar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Método que resuelve la actualización del producto en la base de datos.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__db</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Método que implementa una sobrecarga del metodo especial ´__str__´.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s2">&quot;{ id: &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;, nombre: &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;, cantidad: &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cantidad</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;, precio: &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">precio</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;}&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Método que implementa una sobrecarga del metodo especial ´__repr__´.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s2">&quot;{ id: &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;, nombre: &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;, cantidad: &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cantidad</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;, precio: &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">precio</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;}&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProductFactory"><a class="viewcode-back" href="../model.html#model.ProductFactory">[documentos]</a><span class="k">class</span> <span class="nc">ProductFactory</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Clase que gestiona los diferentes productos que se cargan en la vista.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">productos</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__db</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ProductFactory.crear_producto"><a class="viewcode-back" href="../model.html#model.ProductFactory.crear_producto">[documentos]</a>    <span class="k">def</span> <span class="nf">crear_producto</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">nombre</span><span class="p">,</span>
+        <span class="n">cantidad</span><span class="p">,</span>
+        <span class="n">precio</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Toma los valores que ingresaron por la vista e invoca</span>
+<span class="sd">            el metodo propio del producto para su alta.</span>
+
+<span class="sd">        :param nombre: Nombre del producto que cargó el usuario</span>
+<span class="sd">        :type nombre: str</span>
+<span class="sd">        :param cantidad: Cantidad de producto a agregar</span>
+<span class="sd">        :type cantidad: int</span>
+<span class="sd">        :param precio: Precio unitario del producto a agregar</span>
+<span class="sd">        :type precio: float</span>
+<span class="sd">        :return: id de producto que se acaba de generar</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">prod</span> <span class="o">=</span> <span class="n">Producto</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">cantidad</span><span class="p">,</span> <span class="n">precio</span><span class="p">)</span>
+        <span class="n">prod</span><span class="o">.</span><span class="n">alta</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prod</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">prod</span><span class="o">.</span><span class="n">id</span></div>
+
+<div class="viewcode-block" id="ProductFactory.get_productos"><a class="viewcode-back" href="../model.html#model.ProductFactory.get_productos">[documentos]</a>    <span class="k">def</span> <span class="nf">get_productos</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Busca en la base de datos los productos cargados y los envia a la vista.</span>
+
+<span class="sd">        :return: Lista de objetos :class: ´Producto´</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">productos</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">lista_prod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__db</span><span class="o">.</span><span class="n">get_many_products</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">prod</span> <span class="ow">in</span> <span class="n">lista_prod</span><span class="p">:</span>
+            <span class="n">unprod</span> <span class="o">=</span> <span class="n">Producto</span><span class="p">(</span><span class="n">prod</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">prod</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">prod</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">prod</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unprod</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">lista_prod</span></div>
+
+<div class="viewcode-block" id="ProductFactory.borrar_producto"><a class="viewcode-back" href="../model.html#model.ProductFactory.borrar_producto">[documentos]</a>    <span class="k">def</span> <span class="nf">borrar_producto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Toma el objeto Producto en la lista de productos, invoca su metodo de borrado y actualiza la lista interna.</span>
+
+<span class="sd">        :param index: Indice del producto a borrar en el listado interno.</span>
+<span class="sd">        :type index: int</span>
+<span class="sd">        :return: id de producto que se acaba de borrar</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">borrar</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">productos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
+        <span class="k">return</span> <span class="nb">id</span></div>
+
+<div class="viewcode-block" id="ProductFactory.modificar_producto"><a class="viewcode-back" href="../model.html#model.ProductFactory.modificar_producto">[documentos]</a>    <span class="k">def</span> <span class="nf">modificar_producto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">prod</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Toma el objeto Producto en la lista de productos, invoca su metodo de borrado y actualiza la lista interna.</span>
+
+<span class="sd">        :param index: Indice del producto en el listado interno que se debe actualizar.</span>
+<span class="sd">        :type index: int</span>
+<span class="sd">        :param prod: Objeto de :class: ´Producto´ con los valores a actualizar.</span>
+<span class="sd">        :type prod: int</span>
+<span class="sd">        :return: id de producto que se acaba de actualizar</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">prod</span><span class="o">.</span><span class="n">actualizar</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">prod</span>
+
+        <span class="k">return</span> <span class="nb">id</span></div>
+
+<div class="viewcode-block" id="ProductFactory.buscar"><a class="viewcode-back" href="../model.html#model.ProductFactory.buscar">[documentos]</a>    <span class="k">def</span> <span class="nf">buscar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">condicion</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dado un nombre y una condicion, realiza la busqueda en la base de datos.</span>
+
+<span class="sd">        :param nombre: Nombre o parte del nombre del producto que se desea buscar.</span>
+<span class="sd">        :type nombre: str</span>
+<span class="sd">        :param condicion: Valores que indican el tipo de filtro a usar ´Empieza con´, ´Termina con´ o ´Contiene´</span>
+<span class="sd">        :type condicion: str</span>
+<span class="sd">        :return: lista de :class: ´Producto´ con el resultado de la busqueda</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">nombre</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">nombre</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;Error: Para buscar un producto es necesario indicar algun valor de nombre&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">condicion</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">condicion</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;Error: Para buscar un producto es necesario indicar una condición&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">productos</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">lista_prod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__db</span><span class="o">.</span><span class="n">find_products</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">condicion</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">prod</span> <span class="ow">in</span> <span class="n">lista_prod</span><span class="p">:</span>
+            <span class="n">unprod</span> <span class="o">=</span> <span class="n">Producto</span><span class="p">(</span><span class="n">prod</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">prod</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">prod</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">prod</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unprod</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">lista_prod</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2022, Matias Chavez.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
