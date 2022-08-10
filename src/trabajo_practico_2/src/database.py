@@ -1,10 +1,37 @@
+from ast import Raise
 import sys
 import os
 import sqlite3
 import traceback
+from datetime import datetime
 
 from singleton import Singleton
 
+flog = None
+
+def loguear_transaccion(f):
+    """Decorador para realizar un trace de las transacciones de base de datos realizadas durante una sesion.
+    """
+    print("Entrando a loguear")
+
+    global flog
+
+    def wrapper(*args, **kwargs):
+        start = datetime.now()
+        try:
+            res = f(*args, **kwargs)
+            end = datetime.now()
+        except Exception as exc:
+            end = datetime.now()
+            flog.write(f"Called [{f.__name__}] with {args} at {start} - duration {end - start} with error [{exc}]\n")
+            flog.flush()
+            raise Exception(exc)
+
+        flog.write(f"Called [{f.__name__}] with {args} at {start} - duration {end - start}\n")
+        flog.flush()
+        return res
+
+    return wrapper
 
 @Singleton
 class Database:
@@ -20,6 +47,8 @@ class Database:
         cursor = self.__con.cursor()
         cursor.execute("PRAGMA foreign_keys = ON;")
         cursor.execute("PRAGMA integrity_check;")
+        global flog
+        flog = open("logfile.txt", "a")
 
     def __conexion(
         self,
@@ -51,6 +80,7 @@ class Database:
         cursor.execute(sql)
         self.__con.commit()
 
+    @loguear_transaccion
     def get_many_products(
         self,
     ):
@@ -77,6 +107,7 @@ class Database:
 
         return datos.fetchall()
 
+    @loguear_transaccion
     def insert(
         self,
         prod,
@@ -122,6 +153,7 @@ class Database:
         self.__con.commit()
         return cursor.lastrowid
 
+    @loguear_transaccion
     def delete(
         self,
         prod,
@@ -147,6 +179,7 @@ class Database:
         finally:
             self.__con.commit()
 
+    @loguear_transaccion
     def update(
         self,
         prod,
@@ -176,6 +209,7 @@ class Database:
         finally:
             self.__con.commit()
 
+    @loguear_transaccion
     def find_products(
         self,
         nombre,
