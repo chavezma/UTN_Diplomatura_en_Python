@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Resumen: código de modulo &mdash; documentación de AppNivel3 - 0.0.3</title>
+  <title>singleton &mdash; documentación de AppNivel3 - 0.0.3</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -64,7 +64,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Resumen: código de modulo</li>
+          <li><a href="index.html">Código de módulo</a> &raquo;</li>
+      <li>singleton</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -73,15 +74,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Todos los módulos para los cuales disponen código</h1>
-<ul><li><a href="controller.html">controller</a></li>
-<li><a href="database.html">database</a></li>
-<li><a href="model.html">model</a></li>
-<li><a href="observable.html">observable</a></li>
-<li><a href="observer.html">observer</a></li>
-<li><a href="singleton.html">singleton</a></li>
-<li><a href="view.html">view</a></li>
-</ul>
+  <h1>Código fuente para singleton</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="Singleton"><a class="viewcode-back" href="../singleton.html#singleton.Singleton">[documentos]</a><span></span><span class="k">class</span> <span class="nc">Singleton</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Clase que se utilizara como decorador para instaciar la base como Singleton. Para permitir unicamente una sola conexion a la base a la vez.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cls</span> <span class="o">=</span> <span class="bp">cls</span>
+
+<div class="viewcode-block" id="Singleton.instance"><a class="viewcode-back" href="../singleton.html#singleton.Singleton.instance">[documentos]</a>    <span class="k">def</span> <span class="nf">instance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función que controla que el objeto no se haya instanciado previamente. Si no existe, si retorna una nueva instancia.</span>
+
+<span class="sd">        :return: instancia nueva o existente.</span>
+<span class="sd">        :rtype: :class: ´Singleton´</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cls</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance</span></div>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función que controla que no se intente instanciar mediante el uso de paréntesis.&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Se debe acceder mediante el método `Instance()`.&quot;</span><span class="p">)</span></div>
+</pre></div>
 
            </div>
           </div>

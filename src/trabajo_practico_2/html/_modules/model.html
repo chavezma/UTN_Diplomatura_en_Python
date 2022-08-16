@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>model &mdash; documentación de App_Proyecto - 1.0.0</title>
+  <title>model &mdash; documentación de AppNivel3 - 0.0.3</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -26,10 +26,10 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> App_Proyecto
+            <a href="../index.html" class="icon icon-home"> AppNivel3
           </a>
               <div class="version">
-                1.0.0
+                0.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -44,6 +44,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../controller.html">controller module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../database.html">database module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../model.html">model module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observable.html">observable module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observer.html">observer module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../singleton.html">singleton module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../view.html">view module</a></li>
 </ul>
 
@@ -53,7 +56,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">App_Proyecto</a>
+          <a href="../index.html">AppNivel3</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -126,7 +129,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">nombre</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cantidad</span> <span class="o">=</span> <span class="n">cantidad</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">precio</span> <span class="o">=</span> <span class="n">precio</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__db</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__db</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Producto.alta"><a class="viewcode-back" href="../model.html#model.Producto.alta">[documentos]</a>    <span class="k">def</span> <span class="nf">alta</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -186,7 +189,7 @@
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">productos</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__db</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__db</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
 
 <div class="viewcode-block" id="ProductFactory.crear_producto"><a class="viewcode-back" href="../model.html#model.ProductFactory.crear_producto">[documentos]</a>    <span class="k">def</span> <span class="nf">crear_producto</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -238,7 +241,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">borrar</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">productos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">productos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">productos</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
         <span class="k">return</span> <span class="nb">id</span></div>
 
 <div class="viewcode-block" id="ProductFactory.modificar_producto"><a class="viewcode-back" href="../model.html#model.ProductFactory.modificar_producto">[documentos]</a>    <span class="k">def</span> <span class="nf">modificar_producto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">prod</span><span class="p">):</span>
@@ -261,7 +264,7 @@
 
 <span class="sd">        :param nombre: Nombre o parte del nombre del producto que se desea buscar.</span>
 <span class="sd">        :type nombre: str</span>
-<span class="sd">        :param condicion: Valores que indican el tipo de filtro a usar ´Empieza con´, ´Termina con´ o ´Contiene´</span>
+<span class="sd">        :param condicion: Valores que indican el tipo de filtro a usar ´Comienza con´, ´Termina con´ o ´Contiene´</span>
 <span class="sd">        :type condicion: str</span>
 <span class="sd">        :return: lista de :class: ´Producto´ con el resultado de la busqueda</span>
 <span class="sd">        :rtype: list</span>
