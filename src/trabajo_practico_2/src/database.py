@@ -237,7 +237,7 @@ class Database(DBObservable):
 
         :param nombre: Nombre o parte del nombre del producto que se desea buscar.
         :type nombre: str
-        :param condicion: Valores que indican el tipo de filtro a usar ´Empieza con´, ´Termina con´ o ´Contiene´
+        :param condicion: Valores que indican el tipo de filtro a usar ´Comienza con´, ´Termina con´ o ´Contiene´
         :type condicion: str
         :return: Listado de productos cargados en forma de tuplas
         :rtype: list

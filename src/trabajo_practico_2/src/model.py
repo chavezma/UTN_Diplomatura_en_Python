@@ -187,7 +187,7 @@ class ProductFactory:
 
         :param nombre: Nombre o parte del nombre del producto que se desea buscar.
         :type nombre: str
-        :param condicion: Valores que indican el tipo de filtro a usar ´Empieza con´, ´Termina con´ o ´Contiene´
+        :param condicion: Valores que indican el tipo de filtro a usar ´Comienza con´, ´Termina con´ o ´Contiene´
         :type condicion: str
         :return: lista de :class: ´Producto´ con el resultado de la busqueda
         :rtype: list
