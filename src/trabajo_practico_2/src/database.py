@@ -5,6 +5,8 @@ import sqlite3
 import traceback
 from datetime import datetime
 
+from observable import DBObservable, DBEvents
+from observer import Observer
 from singleton import Singleton
 
 flog = None
@@ -12,7 +14,6 @@ flog = None
 def loguear_transaccion(f):
     """Decorador para realizar un trace de las transacciones de base de datos realizadas durante una sesion.
     """
-    print("Entrando a loguear")
 
     global flog
 
@@ -23,18 +24,21 @@ def loguear_transaccion(f):
             end = datetime.now()
         except Exception as exc:
             end = datetime.now()
-            flog.write(f"Called [{f.__name__}] with {args} at {start} - duration {end - start} with error [{exc}]\n")
+            flog.write(f"[{start}] Called [{f.__name__}] with {args} - duration {end - start} with error [{exc}]\n")
             flog.flush()
             raise Exception(exc)
 
-        flog.write(f"Called [{f.__name__}] with {args} at {start} - duration {end - start}\n")
+        flog.write(f"[{start}] Called [{f.__name__}] with {args} - duration {end - start}\n")
         flog.flush()
         return res
 
     return wrapper
 
+def notify_deleted(prod):
+    print(f"Se ha borrado el producto = {prod}")
+
 @Singleton
-class Database:
+class Database(DBObservable):
     """Clase que encapsula la interacción entre el :class: ´Producto´ y su persistencia en la BD sqllite
     Solo se permite una sola instancia.
     """
@@ -49,6 +53,16 @@ class Database:
         cursor.execute("PRAGMA integrity_check;")
         global flog
         flog = open("logfile.txt", "a")
+
+        super().__init__([DBEvents.Delete, DBEvents.Insert, DBEvents.Update])
+
+        inserted_obs = Observer("inserted")
+        updated_obs = Observer("updated")
+        deleted_obs = Observer("deleted")
+
+        self.add(inserted_obs, DBEvents.Insert)
+        self.add(updated_obs, DBEvents.Update)
+        self.add(deleted_obs, DBEvents.Delete, notify_deleted)
 
     def __conexion(
         self,
@@ -151,6 +165,7 @@ class Database:
             raise Exception(f"Error: {message}")
 
         self.__con.commit()
+        self.notify(DBEvents.Insert, prod)
         return cursor.lastrowid
 
     @loguear_transaccion
@@ -178,6 +193,8 @@ class Database:
             raise Exception(f"Error: {message}")
         finally:
             self.__con.commit()
+
+        self.notify(DBEvents.Delete, prod)
 
     @loguear_transaccion
     def update(
@@ -208,6 +225,7 @@ class Database:
             raise Exception(f"Error: {message}")
         finally:
             self.__con.commit()
+            self.notify(DBEvents.Update, prod)
 
     @loguear_transaccion
     def find_products(
