@@ -35,6 +35,11 @@ def loguear_transaccion(f):
     return wrapper
 
 def notify_deleted(prod):
+    """Función de ejemplo para mostrar el mensaje custom para el caso de notificar un evento de borrado.
+
+    :param prod: Objeto con la información del producto que se quiere insertar
+    :type prod: Producto
+    """
     print(f"Se ha borrado el producto = {prod}")
 
 @Singleton
