@@ -267,13 +267,14 @@ class MainWindow(QMainWindow):
         try:
             lista_prod = self.controller.get_productos()
 
-            if not first_visit and len(lista_prod) == 0:
-                continuar = QMessageBox.information(
-                    self,
-                    "Consultar Producto",
-                    "No se han encontrado productos.",
-                    QMessageBox.Ok,
-                )
+            if len(lista_prod) == 0:
+                if not first_visit:
+                    continuar = QMessageBox.information(
+                        self,
+                        "Consultar Producto",
+                        "No se han encontrado productos.",
+                        QMessageBox.Ok,
+                    )
                 return
 
             numrows = len(lista_prod)

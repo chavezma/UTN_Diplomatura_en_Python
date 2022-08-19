@@ -6,7 +6,6 @@ LEN_PREFIJO = 10
 IP = "localhost"
 PORT = 80
 
-# Create a socket
 # socket.AF_INET - IPv4
 # socket.SOCK_STREAM - TCP
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -57,7 +56,7 @@ while True:
             # Agregamos informacion del cliente conectado
             clients[client_socket] = usuario_entrante
 
-            print(f"Nuevo cliente {client_address[0]}:{client_address[1]}, username: {usuario_entrante['informacion'].decode('utf-8')}")
+            print(f"Nuevo cliente {client_address[0]}:{client_address[1]}, usuario: {usuario_entrante['informacion'].decode('utf-8')}")
 
         # Se trata de un envio de mensaje de un cliente ya agregado
         else:
