@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>view &mdash; documentación de AppNivel3 - 0.0.3</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> AppNivel3
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../controller.html">controller module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../database.html">database module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model.html">model module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observable.html">observable module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observer.html">observer module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../singleton.html">singleton module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../view.html">view module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">AppNivel3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Código de módulo</a> &raquo;</li>
+      <li>view</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código fuente para view</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtWidgets</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIntValidator</span><span class="p">,</span> <span class="n">QDoubleValidator</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QMainWindow</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span> <span class="nn">PyQt5.uic</span> <span class="kn">import</span> <span class="n">loadUi</span>
+
+<span class="kn">from</span> <span class="nn">model</span> <span class="kn">import</span> <span class="n">Producto</span>
+
+
+<div class="viewcode-block" id="Application"><a class="viewcode-back" href="../view.html#view.Application">[documentos]</a><span class="k">class</span> <span class="nc">Application</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Clase que representa a la aplicación principal.</span>
+
+<span class="sd">    :param controller: Controlador que vinculará la vista con el modelo.</span>
+<span class="sd">    :type controller: Controller</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">controller</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">the_view</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">(</span><span class="n">controller</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">the_view</span><span class="o">.</span><span class="n">setFixedHeight</span><span class="p">(</span><span class="mi">398</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">the_view</span><span class="o">.</span><span class="n">setFixedWidth</span><span class="p">(</span><span class="mi">491</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">the_view</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="BuscarProdWindow"><a class="viewcode-back" href="../view.html#view.BuscarProdWindow">[documentos]</a><span class="k">class</span> <span class="nc">BuscarProdWindow</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Clase que representa a una ventana secundaria (Modal) para mostrar la busqueda de un producto.</span>
+
+<span class="sd">    :param parent: Aplicación/Ventana padre</span>
+<span class="sd">    :type parent: MainWindow</span>
+<span class="sd">    :param controller: Controlador para acceder al modelo.</span>
+<span class="sd">    :type controller: Controller</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">parent</span><span class="p">,</span>
+        <span class="n">controller</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">controller</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">loadUi</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;../view&quot;</span><span class="p">,</span> <span class="s2">&quot;buscarProd.ui&quot;</span><span class="p">),</span> <span class="bp">self</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cmb_buscar</span><span class="o">.</span><span class="n">addItems</span><span class="p">([</span><span class="s2">&quot;Comienza con&quot;</span><span class="p">,</span> <span class="s2">&quot;Termina con&quot;</span><span class="p">,</span> <span class="s2">&quot;Contiene&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_buscar</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buscar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_cancelar</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cancelar</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BuscarProdWindow.launch"><a class="viewcode-back" href="../view.html#view.BuscarProdWindow.launch">[documentos]</a>    <span class="k">def</span> <span class="nf">launch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función para invocar la pantalla de busqueda, dejando la ventana principal en segundo plano.&quot;&quot;&quot;</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lst_prod</span></div>
+
+<div class="viewcode-block" id="BuscarProdWindow.cancelar"><a class="viewcode-back" href="../view.html#view.BuscarProdWindow.cancelar">[documentos]</a>    <span class="k">def</span> <span class="nf">cancelar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función asociada al click del boton Cancelar para volver a la ventana principal sin realizar ninguna acción.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BuscarProdWindow.buscar"><a class="viewcode-back" href="../view.html#view.BuscarProdWindow.buscar">[documentos]</a>    <span class="k">def</span> <span class="nf">buscar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función asociada al click del boton Buscar para efecutar la busqueda de un producto.&quot;&quot;&quot;</span>
+        <span class="n">nombre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipt_nombre</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">criterio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmb_buscar</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">nombre</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Buscar Producto&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Para buscar un producto debe ingresar algun valor de nombre&quot;</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lst_prod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">get_productos_por_nombre</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">criterio</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lst_prod</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span>
+                    <span class="s2">&quot;Buscar Producto&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;No se han encontrado productos con el criterio elegido.&quot;</span><span class="p">,</span>
+                    <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">return</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;BuscarProd: Ocurrió un error al intentar buscar </span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;error crear producto message: [</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">]&quot;</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Buscar Producto&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="ModProdWindow"><a class="viewcode-back" href="../view.html#view.ModProdWindow">[documentos]</a><span class="k">class</span> <span class="nc">ModProdWindow</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Clase que representa a una ventana secundaria (Modal) para mostrar la modificación de un producto.</span>
+
+<span class="sd">    :param prod: objeto producto con la información del producto a modificar.</span>
+<span class="sd">    :type prod: Producto</span>
+<span class="sd">    :param parent: Aplicación/Ventana padre</span>
+<span class="sd">    :type parent: MainWindow</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">prod</span><span class="p">,</span>
+        <span class="n">parent</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prod</span> <span class="o">=</span> <span class="n">prod</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">loadUi</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;../view&quot;</span><span class="p">,</span> <span class="s2">&quot;modificarProducto.ui&quot;</span><span class="p">),</span>
+            <span class="bp">self</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ipt_precio</span><span class="o">.</span><span class="n">setValidator</span><span class="p">(</span><span class="n">QDoubleValidator</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ipt_cantidad</span><span class="o">.</span><span class="n">setValidator</span><span class="p">(</span><span class="n">QIntValidator</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ipt_nombre</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prod</span><span class="o">.</span><span class="n">nombre</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ipt_cantidad</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prod</span><span class="o">.</span><span class="n">cantidad</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ipt_precio</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prod</span><span class="o">.</span><span class="n">precio</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_guardar</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guardar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_cancelar</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cancelar</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ModProdWindow.launch"><a class="viewcode-back" href="../view.html#view.ModProdWindow.launch">[documentos]</a>    <span class="k">def</span> <span class="nf">launch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función para invocar la pantalla de modificación, dejando la ventana principal en segundo plano.&quot;&quot;&quot;</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prod</span></div>
+
+<div class="viewcode-block" id="ModProdWindow.cancelar"><a class="viewcode-back" href="../view.html#view.ModProdWindow.cancelar">[documentos]</a>    <span class="k">def</span> <span class="nf">cancelar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función asociada al click del boton Cancelar para volver a la ventana principal sin realizar ninguna acción.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ModProdWindow.guardar"><a class="viewcode-back" href="../view.html#view.ModProdWindow.guardar">[documentos]</a>    <span class="k">def</span> <span class="nf">guardar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función asociada al click del boton Guardar para efecutar la persistencia del producto en el modelo.&quot;&quot;&quot;</span>
+        <span class="n">nombre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipt_nombre</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">cantidad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipt_cantidad</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">precio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipt_precio</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+        <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="s2">&quot;Modificar Producto&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;¿Esta seguro que desea modificar el producto?&quot;</span><span class="p">,</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">continuar</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="nb">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prod</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prod</span> <span class="o">=</span> <span class="n">Producto</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">cantidad</span><span class="p">,</span> <span class="n">precio</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;ModifProd: Ocurrió un error al intentar actualizar </span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;error crear producto message: [</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">]&quot;</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Modificar Producto&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="MainWindow"><a class="viewcode-back" href="../view.html#view.MainWindow">[documentos]</a><span class="k">class</span> <span class="nc">MainWindow</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Clase que representa la ventana principal de la aplicación de gestión de productos.</span>
+
+<span class="sd">    :param controller: objeto que vincula la vista con el modelo.</span>
+<span class="sd">    :type controller: Controller</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">controller</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span>
+            <span class="n">MainWindow</span><span class="p">,</span>
+            <span class="bp">self</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">controller</span>
+        <span class="n">loadUi</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;../view&quot;</span><span class="p">,</span> <span class="s2">&quot;main.ui&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ipt_precio</span><span class="o">.</span><span class="n">setValidator</span><span class="p">(</span><span class="n">QDoubleValidator</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ipt_cantidad</span><span class="o">.</span><span class="n">setValidator</span><span class="p">(</span><span class="n">QIntValidator</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_alta</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_borrar</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">borrar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_modificar</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modificar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_consultar</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">consultar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_buscar</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buscar</span><span class="p">)</span>
+        <span class="c1"># ancho 491</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setColumnWidth</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">numcolums</span> <span class="o">=</span> <span class="mi">4</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setEditTriggers</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">NoEditTriggers</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">consultar</span><span class="p">(</span><span class="n">first_visit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MainWindow.alta"><a class="viewcode-back" href="../view.html#view.MainWindow.alta">[documentos]</a>    <span class="k">def</span> <span class="nf">alta</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función asociada al click del boton Alta para efecutar la persistencia del producto en el modelo.&quot;&quot;&quot;</span>
+        <span class="n">nombre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipt_nombre</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">cantidad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipt_cantidad</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">precio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipt_precio</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">alta</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">cantidad</span><span class="p">,</span> <span class="n">precio</span><span class="p">)</span>
+
+            <span class="n">row_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">insertRow</span><span class="p">(</span><span class="n">row_position</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span>
+                <span class="n">row_position</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span>
+                <span class="n">row_position</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">nombre</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span>
+                <span class="n">row_position</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">cantidad</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span>
+                <span class="n">row_position</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">precio</span><span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Alta Producto&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;El producto se dio de alta satisfactoriamente&quot;</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Alta Producto&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="MainWindow.consultar"><a class="viewcode-back" href="../view.html#view.MainWindow.consultar">[documentos]</a>    <span class="k">def</span> <span class="nf">consultar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">first_visit</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función asociada al click del boton Consultar para efecutar la carga de productos del modelo en la grilla.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">lista_prod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">get_productos</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">first_visit</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">lista_prod</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span>
+                    <span class="s2">&quot;Consultar Producto&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;No se han encontrado productos.&quot;</span><span class="p">,</span>
+                    <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="n">numrows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lista_prod</span><span class="p">)</span>
+            <span class="n">numcols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lista_prod</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setColumnCount</span><span class="p">(</span><span class="n">numcols</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="n">numrows</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numrows</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numcols</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span>
+                        <span class="n">row</span><span class="p">,</span>
+                        <span class="n">column</span><span class="p">,</span>
+                        <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">lista_prod</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">column</span><span class="p">])),</span>
+                    <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Consultar Producto&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">first_visit</span><span class="p">:</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Consultar Producto&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Se han encontrado </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lista_prod</span><span class="p">)</span><span class="si">}</span><span class="s2"> productos.&quot;</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="MainWindow.borrar"><a class="viewcode-back" href="../view.html#view.MainWindow.borrar">[documentos]</a>    <span class="k">def</span> <span class="nf">borrar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función asociada al click del boton Borrar para efecutar el borrado del producto seleccionado en la grilla.&quot;&quot;&quot;</span>
+        <span class="n">indexes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">selectionModel</span><span class="p">()</span><span class="o">.</span><span class="n">selectedRows</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Borrar Producto&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Para borrar un producto primero debe seleccionar un registro de la grilla&quot;</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Borrar Producto&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Ha seleccionado </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span><span class="si">}</span><span class="s2"> producto.</span><span class="se">\n</span><span class="s2"> ¿Esta seguro que desea borrarlos todos?&quot;</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">continuar</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">:</span>
+                <span class="k">return</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Borrar Producto&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;¿Esta seguro que desea borrar el producto seleccionado?&quot;</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">continuar</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">:</span>
+                <span class="k">return</span>
+
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">indexes</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">borrar</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">()</span> <span class="o">-</span> <span class="n">offset</span><span class="p">)</span>
+                <span class="n">offset</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Borrar Producto&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span>
+                <span class="p">)</span>
+                <span class="k">return</span>
+
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">indexes</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">removeRow</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">row</span><span class="p">()</span> <span class="o">-</span> <span class="n">offset</span><span class="p">)</span>
+                <span class="n">offset</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Borrar Producto&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span>
+                <span class="p">)</span>
+                <span class="k">return</span>
+
+        <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="s2">&quot;Borrar Producto&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;El/los productos seleccionado/s se borraron satisfactoriamente&quot;</span><span class="p">,</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="MainWindow.modificar"><a class="viewcode-back" href="../view.html#view.MainWindow.modificar">[documentos]</a>    <span class="k">def</span> <span class="nf">modificar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función asociada al click del boton Modificar para invocar la pantalla de modificacion de productos según el seleccionado en la grilla.&quot;&quot;&quot;</span>
+        <span class="n">indexes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">selectionModel</span><span class="p">()</span><span class="o">.</span><span class="n">selectedRows</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Modificar Producto&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Para modificar un producto primero debe seleccionarlo haciendo click sobre el margen izquierdo de la fila&quot;</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Modificar Producto&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Ha seleccionado </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span><span class="si">}</span><span class="s2"> productos.</span><span class="se">\n</span><span class="s2"> Solo puede modificar uno por vez&quot;</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">prod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">get_producto_por_index</span><span class="p">(</span><span class="n">indexes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">row</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Modificar Producto&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">pop_modif</span> <span class="o">=</span> <span class="n">ModProdWindow</span><span class="p">(</span><span class="n">prod</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">prod_modif</span> <span class="o">=</span> <span class="n">pop_modif</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">prod_modif</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">actualizar_producto</span><span class="p">(</span><span class="n">indexes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">row</span><span class="p">(),</span> <span class="n">prod_modif</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">prod_modif</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span>
+                    <span class="n">indexes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">row</span><span class="p">(),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">prod_modif</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span>
+                    <span class="n">indexes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">row</span><span class="p">(),</span>
+                    <span class="mi">1</span><span class="p">,</span>
+                    <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">prod_modif</span><span class="o">.</span><span class="n">nombre</span><span class="p">)),</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span>
+                    <span class="n">indexes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">row</span><span class="p">(),</span>
+                    <span class="mi">2</span><span class="p">,</span>
+                    <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">prod_modif</span><span class="o">.</span><span class="n">cantidad</span><span class="p">)),</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span>
+                    <span class="n">indexes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">row</span><span class="p">(),</span>
+                    <span class="mi">3</span><span class="p">,</span>
+                    <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">prod_modif</span><span class="o">.</span><span class="n">precio</span><span class="p">)),</span>
+                <span class="p">)</span>
+
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Modificar Producto&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;El producto seleccionado se ha modificado satisfactoriamente&quot;</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Modificar Producto&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span>
+            <span class="p">)</span>
+            <span class="k">return</span></div>
+
+<div class="viewcode-block" id="MainWindow.buscar"><a class="viewcode-back" href="../view.html#view.MainWindow.buscar">[documentos]</a>    <span class="k">def</span> <span class="nf">buscar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Función asociada al click del boton Buscar para invocar la pantalla de busqueda de productos.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">pop_buscar</span> <span class="o">=</span> <span class="n">BuscarProdWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">)</span>
+            <span class="n">pop_buscar</span><span class="o">.</span><span class="n">setFixedHeight</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+            <span class="n">pop_buscar</span><span class="o">.</span><span class="n">setFixedWidth</span><span class="p">(</span><span class="mi">250</span><span class="p">)</span>
+            <span class="n">prod_find</span> <span class="o">=</span> <span class="n">pop_buscar</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">prod_find</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="n">numrows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">prod_find</span><span class="p">)</span>
+            <span class="n">numcols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">prod_find</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setColumnCount</span><span class="p">(</span><span class="n">numcols</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="n">numrows</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numrows</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numcols</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">table_widget</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span>
+                        <span class="n">row</span><span class="p">,</span>
+                        <span class="n">column</span><span class="p">,</span>
+                        <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">prod_find</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">column</span><span class="p">])),</span>
+                    <span class="p">)</span>
+
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Buscar Producto&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Se han encontrado </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">prod_find</span><span class="p">)</span><span class="si">}</span><span class="s2"> productos.&quot;</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">continuar</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Buscar Producto&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span>
+            <span class="p">)</span>
+            <span class="k">return</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2022, Matias Chavez.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

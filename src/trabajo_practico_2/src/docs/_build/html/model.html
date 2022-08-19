@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>model module &mdash; documentación de AppNivel3 - 0.0.3</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/translations.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="observable module" href="observable.html" />
+    <link rel="prev" title="database module" href="database.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> AppNivel3
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="controller.html">controller module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">database module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">model module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observable.html">observable module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observer.html">observer module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="singleton.html">singleton module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="view.html">view module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AppNivel3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>model module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/model.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-model">
+<span id="model-module"></span><h1>model module<a class="headerlink" href="#module-model" title="Enlace permanente a este encabezado"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="model.ProductFactory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">model.</span></span><span class="sig-name descname"><span class="pre">ProductFactory</span></span><a class="reference internal" href="_modules/model.html#ProductFactory"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#model.ProductFactory" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase que gestiona los diferentes productos que se cargan en la vista.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="model.ProductFactory.borrar_producto">
+<span class="sig-name descname"><span class="pre">borrar_producto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model.html#ProductFactory.borrar_producto"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#model.ProductFactory.borrar_producto" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Toma el objeto Producto en la lista de productos, invoca su metodo de borrado y actualiza la lista interna.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Indice del producto a borrar en el listado interno.</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>id de producto que se acaba de borrar</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="model.ProductFactory.buscar">
+<span class="sig-name descname"><span class="pre">buscar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nombre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condicion</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model.html#ProductFactory.buscar"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#model.ProductFactory.buscar" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Dado un nombre y una condicion, realiza la busqueda en la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nombre</strong> (<em>str</em>) – Nombre o parte del nombre del producto que se desea buscar.</p></li>
+<li><p><strong>condicion</strong> (<em>str</em>) – Valores que indican el tipo de filtro a usar ´Comienza con´, ´Termina con´ o ´Contiene´</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>lista de :class: ´Producto´ con el resultado de la busqueda</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="model.ProductFactory.crear_producto">
+<span class="sig-name descname"><span class="pre">crear_producto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nombre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cantidad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precio</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model.html#ProductFactory.crear_producto"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#model.ProductFactory.crear_producto" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><dl class="simple">
+<dt>Toma los valores que ingresaron por la vista e invoca</dt><dd><p>el metodo propio del producto para su alta.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nombre</strong> (<em>str</em>) – Nombre del producto que cargó el usuario</p></li>
+<li><p><strong>cantidad</strong> (<em>int</em>) – Cantidad de producto a agregar</p></li>
+<li><p><strong>precio</strong> (<em>float</em>) – Precio unitario del producto a agregar</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>id de producto que se acaba de generar</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="model.ProductFactory.get_productos">
+<span class="sig-name descname"><span class="pre">get_productos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model.html#ProductFactory.get_productos"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#model.ProductFactory.get_productos" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Busca en la base de datos los productos cargados y los envia a la vista.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Lista de objetos :class: ´Producto´</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="model.ProductFactory.modificar_producto">
+<span class="sig-name descname"><span class="pre">modificar_producto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prod</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model.html#ProductFactory.modificar_producto"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#model.ProductFactory.modificar_producto" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Toma el objeto Producto en la lista de productos, invoca su metodo de borrado y actualiza la lista interna.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – Indice del producto en el listado interno que se debe actualizar.</p></li>
+<li><p><strong>prod</strong> (<em>int</em>) – Objeto de :class: ´Producto´ con los valores a actualizar.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>id de producto que se acaba de actualizar</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="model.Producto">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">model.</span></span><span class="sig-name descname"><span class="pre">Producto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nombre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cantidad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model.html#Producto"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#model.Producto" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase que representa un producto del modelo de datos</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nombre</strong> (<em>str</em>) – Nombre que identifica el producto</p></li>
+<li><p><strong>cantidad</strong> (<em>int</em>) – Cantidad a agregar de ese producto</p></li>
+<li><p><strong>precio</strong> (<em>float</em>) – Precio del producto a agregar</p></li>
+<li><p><strong>id</strong> (<em>int</em><em>, </em><em>optional</em>) – Id del producto en la base de datos, por defecto None</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="model.Producto.actualizar">
+<span class="sig-name descname"><span class="pre">actualizar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model.html#Producto.actualizar"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#model.Producto.actualizar" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Método que resuelve la actualización del producto en la base de datos.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="model.Producto.alta">
+<span class="sig-name descname"><span class="pre">alta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model.html#Producto.alta"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#model.Producto.alta" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Método que resuelve el alta del producto en la base de datos.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="model.Producto.borrar">
+<span class="sig-name descname"><span class="pre">borrar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/model.html#Producto.borrar"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#model.Producto.borrar" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Método que resuelve la eliminación del producto en la base de datos.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="database.html" class="btn btn-neutral float-left" title="database module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="observable.html" class="btn btn-neutral float-right" title="observable module" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2022, Matias Chavez.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

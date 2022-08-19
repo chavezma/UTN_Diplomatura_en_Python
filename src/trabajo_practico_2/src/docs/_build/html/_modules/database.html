@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>database &mdash; documentación de AppNivel3 - 0.0.3</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> AppNivel3
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../controller.html">controller module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../database.html">database module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model.html">model module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observable.html">observable module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observer.html">observer module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../singleton.html">singleton module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../view.html">view module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">AppNivel3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Código de módulo</a> &raquo;</li>
+      <li>database</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código fuente para database</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">Raise</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">observable</span> <span class="kn">import</span> <span class="n">DBObservable</span><span class="p">,</span> <span class="n">DBEvents</span>
+<span class="kn">from</span> <span class="nn">observer</span> <span class="kn">import</span> <span class="n">Observer</span>
+<span class="kn">from</span> <span class="nn">singleton</span> <span class="kn">import</span> <span class="n">Singleton</span>
+
+<span class="n">flog</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="loguear_transaccion"><a class="viewcode-back" href="../database.html#database.loguear_transaccion">[documentos]</a><span class="k">def</span> <span class="nf">loguear_transaccion</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decorador para realizar un trace de las transacciones de base de datos realizadas durante una sesion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">global</span> <span class="n">flog</span>
+
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">flog</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2">] Called [</span><span class="si">{</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">] with </span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2"> - duration </span><span class="si">{</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="si">}</span><span class="s2"> with error [</span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">flog</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+
+        <span class="n">flog</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2">] Called [</span><span class="si">{</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">] with </span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2"> - duration </span><span class="si">{</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">flog</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
+<div class="viewcode-block" id="notify_deleted"><a class="viewcode-back" href="../database.html#database.notify_deleted">[documentos]</a><span class="k">def</span> <span class="nf">notify_deleted</span><span class="p">(</span><span class="n">prod</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Función de ejemplo para mostrar el mensaje custom para el caso de notificar un evento de borrado.</span>
+
+<span class="sd">    :param prod: Objeto con la información del producto que se quiere insertar</span>
+<span class="sd">    :type prod: Producto</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Se ha borrado el producto = </span><span class="si">{</span><span class="n">prod</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<span class="c1"># @Singleton</span>
+<div class="viewcode-block" id="Database"><a class="viewcode-back" href="../database.html#database.Database">[documentos]</a><span class="k">class</span> <span class="nc">Database</span><span class="p">(</span><span class="n">DBObservable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Clase que encapsula la interacción entre el :class: ´Producto´ y su persistencia en la BD sqllite</span>
+<span class="sd">    Solo se permite una sola instancia.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__conexion</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__crear_tabla</span><span class="p">()</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;PRAGMA foreign_keys = ON;&quot;</span><span class="p">)</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;PRAGMA integrity_check;&quot;</span><span class="p">)</span>
+        <span class="k">global</span> <span class="n">flog</span>
+        <span class="n">flog</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;logfile.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="n">DBEvents</span><span class="o">.</span><span class="n">Delete</span><span class="p">,</span> <span class="n">DBEvents</span><span class="o">.</span><span class="n">Insert</span><span class="p">,</span> <span class="n">DBEvents</span><span class="o">.</span><span class="n">Update</span><span class="p">])</span>
+
+        <span class="n">inserted_obs</span> <span class="o">=</span> <span class="n">Observer</span><span class="p">(</span><span class="s2">&quot;inserted&quot;</span><span class="p">)</span>
+        <span class="n">updated_obs</span> <span class="o">=</span> <span class="n">Observer</span><span class="p">(</span><span class="s2">&quot;updated&quot;</span><span class="p">)</span>
+        <span class="n">deleted_obs</span> <span class="o">=</span> <span class="n">Observer</span><span class="p">(</span><span class="s2">&quot;deleted&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">inserted_obs</span><span class="p">,</span> <span class="n">DBEvents</span><span class="o">.</span><span class="n">Insert</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">updated_obs</span><span class="p">,</span> <span class="n">DBEvents</span><span class="o">.</span><span class="n">Update</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">deleted_obs</span><span class="p">,</span> <span class="n">DBEvents</span><span class="o">.</span><span class="n">Delete</span><span class="p">,</span> <span class="n">notify_deleted</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__conexion</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Genera una conexión con la base de datos</span>
+
+<span class="sd">        :return: id de producto que se acaba de generar</span>
+<span class="sd">        :rtype: :class: ´sqlite3.Connection´</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;Productos.db&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__crear_tabla</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Genera el modelo de datos (tablas) si no existen.&quot;&quot;&quot;</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot; CREATE TABLE IF NOT EXISTS productos</span>
+<span class="s2">                (</span>
+<span class="s2">                    id INTEGER PRIMARY KEY AUTOINCREMENT,</span>
+<span class="s2">                    nombre varchar(20) NOT NULL,</span>
+<span class="s2">                    cantidad real NOT NULL,</span>
+<span class="s2">                    precio real NOT NULL,</span>
+<span class="s2">                    UNIQUE(nombre)</span>
+<span class="s2">                )</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="c1"># @loguear_transaccion</span>
+<div class="viewcode-block" id="Database.get_many_products"><a class="viewcode-back" href="../database.html#database.Database.get_many_products">[documentos]</a>    <span class="k">def</span> <span class="nf">get_many_products</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Realiza la consulta a la base de datos para obtener todos los registros de la tabla ´productos´</span>
+
+<span class="sd">        :return: Listado de productos cargados en forma de tuplas</span>
+<span class="sd">        :rtype: list(tuple)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM productos ORDER BY id ASC&quot;</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">datos</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;sqllite: Ocurrió un error al intentar obtener los productos</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Exception class is: &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Exception is &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Detalle SQLite exception traceback: &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+            <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">datos</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span></div>
+
+    <span class="c1"># @loguear_transaccion</span>
+<div class="viewcode-block" id="Database.insert"><a class="viewcode-back" href="../database.html#database.Database.insert">[documentos]</a>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">prod</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Realiza la inserción del producto ´prod´ a la base de datos</span>
+
+<span class="sd">        :param prod: Objeto con la información del producto que se quiere insertar</span>
+<span class="sd">        :type prod: Producto</span>
+<span class="sd">        :return: El id del objeto que se acaba de insertar</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;PRAGMA foreign_keys = ON;&quot;</span><span class="p">)</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;PRAGMA integrity_check;&quot;</span><span class="p">)</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">prod</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="n">prod</span><span class="o">.</span><span class="n">cantidad</span><span class="p">,</span> <span class="n">prod</span><span class="o">.</span><span class="n">precio</span><span class="p">)</span>
+
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO productos(nombre, cantidad, precio) VALUES(?, ?, ?)&quot;</span>
+            <span class="n">datos</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">IntegrityError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;Error: El nombre ya esta siendo utilizado por otro producto&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;sqllite: Ocurrió un error al intentar insertar </span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Exception class is: &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Exception is &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Detalle SQLite exception traceback: &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span>
+
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;sqllite: Ocurrió un error al intentar insertar </span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Exception class is: &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Exception is &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Detalle SQLite exception traceback: &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">DBEvents</span><span class="o">.</span><span class="n">Insert</span><span class="p">,</span> <span class="n">prod</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+
+    <span class="c1"># @loguear_transaccion</span>
+<div class="viewcode-block" id="Database.delete"><a class="viewcode-back" href="../database.html#database.Database.delete">[documentos]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">prod</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Realiza el borrado del producto ´prod´ a la base de datos</span>
+
+<span class="sd">        :param prod: Objeto con la información del producto que se quiere borrar</span>
+<span class="sd">        :type prod: Producto</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">prod</span><span class="o">.</span><span class="n">id</span><span class="p">),)</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;DELETE from productos where id = ?;&quot;</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;sqllite: Ocurrió un error al intentar borrar </span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Exception class is: &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Exception is &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Detalle SQLite exception traceback: &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">DBEvents</span><span class="o">.</span><span class="n">Delete</span><span class="p">,</span> <span class="n">prod</span><span class="p">)</span></div>
+
+    <span class="c1"># @loguear_transaccion</span>
+<div class="viewcode-block" id="Database.update"><a class="viewcode-back" href="../database.html#database.Database.update">[documentos]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">prod</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Realiza la actualizacion del producto ´prod´ a la base de datos</span>
+
+<span class="sd">        :param prod: Objeto con la información del producto que se quiere actualizar</span>
+<span class="sd">        :type prod: Producto</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">prod</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="n">prod</span><span class="o">.</span><span class="n">cantidad</span><span class="p">,</span> <span class="n">prod</span><span class="o">.</span><span class="n">precio</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">prod</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;UPDATE productos SET nombre=?, cantidad=?, precio=? WHERE id=?;&quot;</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">IntegrityError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;Error: El nombre ya esta siendo utilizado por otro producto&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;sqllite: Ocurrió un error al intentar actualizar </span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Exception class is: &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Exception is &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Detalle SQLite exception traceback: &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">DBEvents</span><span class="o">.</span><span class="n">Update</span><span class="p">,</span> <span class="n">prod</span><span class="p">)</span></div>
+
+    <span class="c1"># @loguear_transaccion</span>
+<div class="viewcode-block" id="Database.find_products"><a class="viewcode-back" href="../database.html#database.Database.find_products">[documentos]</a>    <span class="k">def</span> <span class="nf">find_products</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">nombre</span><span class="p">,</span>
+        <span class="n">condicion</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dado un nombre y una condicion, realiza la busqueda en la base de datos.</span>
+
+<span class="sd">        :param nombre: Nombre o parte del nombre del producto que se desea buscar.</span>
+<span class="sd">        :type nombre: str</span>
+<span class="sd">        :param condicion: Valores que indican el tipo de filtro a usar ´Comienza con´, ´Termina con´ o ´Contiene´</span>
+<span class="sd">        :type condicion: str</span>
+<span class="sd">        :return: Listado de productos cargados en forma de tuplas</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">condicion</span> <span class="o">==</span> <span class="s2">&quot;Comienza con&quot;</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,)</span>
+            <span class="k">elif</span> <span class="n">condicion</span> <span class="o">==</span> <span class="s2">&quot;Termina con&quot;</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># CONTIENE</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,)</span>
+
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM productos where nombre like ?&quot;</span>
+            <span class="n">datos</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;sqllite: Ocurrió un error al intentar buscar </span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Exception class is: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Exception is &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;Detalle SQLite exception traceback: &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">datos</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2022, Matias Chavez.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
