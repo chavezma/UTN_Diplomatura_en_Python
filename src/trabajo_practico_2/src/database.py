@@ -1,13 +1,49 @@
+from ast import Raise
 import sys
 import os
 import sqlite3
 import traceback
+from datetime import datetime
 
+from observable import DBObservable, DBEvents
+from observer import Observer
 from singleton import Singleton
 
+flog = None
+
+def loguear_transaccion(f):
+    """Decorador para realizar un trace de las transacciones de base de datos realizadas durante una sesion.
+    """
+
+    global flog
+
+    def wrapper(*args, **kwargs):
+        start = datetime.now()
+        try:
+            res = f(*args, **kwargs)
+            end = datetime.now()
+        except Exception as exc:
+            end = datetime.now()
+            flog.write(f"[{start}] Called [{f.__name__}] with {args} - duration {end - start} with error [{exc}]\n")
+            flog.flush()
+            raise Exception(exc)
+
+        flog.write(f"[{start}] Called [{f.__name__}] with {args} - duration {end - start}\n")
+        flog.flush()
+        return res
+
+    return wrapper
+
+def notify_deleted(prod):
+    """Función de ejemplo para mostrar el mensaje custom para el caso de notificar un evento de borrado.
+
+    :param prod: Objeto con la información del producto que se quiere insertar
+    :type prod: Producto
+    """
+    print(f"Se ha borrado el producto = {prod}")
 
 @Singleton
-class Database:
+class Database(DBObservable):
     """Clase que encapsula la interacción entre el :class: ´Producto´ y su persistencia en la BD sqllite
     Solo se permite una sola instancia.
     """
@@ -20,6 +56,18 @@ class Database:
         cursor = self.__con.cursor()
         cursor.execute("PRAGMA foreign_keys = ON;")
         cursor.execute("PRAGMA integrity_check;")
+        global flog
+        flog = open("logfile.txt", "a")
+
+        super().__init__([DBEvents.Delete, DBEvents.Insert, DBEvents.Update])
+
+        inserted_obs = Observer("inserted")
+        updated_obs = Observer("updated")
+        deleted_obs = Observer("deleted")
+
+        self.add(inserted_obs, DBEvents.Insert)
+        self.add(updated_obs, DBEvents.Update)
+        self.add(deleted_obs, DBEvents.Delete, notify_deleted)
 
     def __conexion(
         self,
@@ -51,6 +99,7 @@ class Database:
         cursor.execute(sql)
         self.__con.commit()
 
+    @loguear_transaccion
     def get_many_products(
         self,
     ):
@@ -77,6 +126,7 @@ class Database:
 
         return datos.fetchall()
 
+    @loguear_transaccion
     def insert(
         self,
         prod,
@@ -120,8 +170,10 @@ class Database:
             raise Exception(f"Error: {message}")
 
         self.__con.commit()
+        self.notify(DBEvents.Insert, prod)
         return cursor.lastrowid
 
+    @loguear_transaccion
     def delete(
         self,
         prod,
@@ -147,6 +199,9 @@ class Database:
         finally:
             self.__con.commit()
 
+        self.notify(DBEvents.Delete, prod)
+
+    @loguear_transaccion
     def update(
         self,
         prod,
@@ -175,7 +230,9 @@ class Database:
             raise Exception(f"Error: {message}")
         finally:
             self.__con.commit()
+            self.notify(DBEvents.Update, prod)
 
+    @loguear_transaccion
     def find_products(
         self,
         nombre,
@@ -185,7 +242,7 @@ class Database:
 
         :param nombre: Nombre o parte del nombre del producto que se desea buscar.
         :type nombre: str
-        :param condicion: Valores que indican el tipo de filtro a usar ´Empieza con´, ´Termina con´ o ´Contiene´
+        :param condicion: Valores que indican el tipo de filtro a usar ´Comienza con´, ´Termina con´ o ´Contiene´
         :type condicion: str
         :return: Listado de productos cargados en forma de tuplas
         :rtype: list

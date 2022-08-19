@@ -49,7 +49,7 @@ class BuscarProdWindow(QDialog):
             os.path.join(os.path.abspath(__file__), "../view", "buscarProd.ui"), self
         )
 
-        self.cmb_buscar.addItems(["Empieza con", "Termina con", "Contiene"])
+        self.cmb_buscar.addItems(["Comienza con", "Termina con", "Contiene"])
         self.btn_buscar.clicked.connect(self.buscar)
         self.btn_cancelar.clicked.connect(self.cancelar)
 
@@ -219,6 +219,8 @@ class MainWindow(QMainWindow):
 
         self.table_widget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
+        self.consultar(first_visit=True)
+
     def alta(
         self,
     ):
@@ -259,18 +261,20 @@ class MainWindow(QMainWindow):
 
     def consultar(
         self,
+        first_visit=False
     ):
         """Función asociada al click del boton Consultar para efecutar la carga de productos del modelo en la grilla."""
         try:
             lista_prod = self.controller.get_productos()
 
             if len(lista_prod) == 0:
-                continuar = QMessageBox.information(
-                    self,
-                    "Consultar Producto",
-                    "No se han encontrado productos.",
-                    QMessageBox.Ok,
-                )
+                if not first_visit:
+                    continuar = QMessageBox.information(
+                        self,
+                        "Consultar Producto",
+                        "No se han encontrado productos.",
+                        QMessageBox.Ok,
+                    )
                 return
 
             numrows = len(lista_prod)
@@ -288,16 +292,17 @@ class MainWindow(QMainWindow):
                     )
         except Exception as e:
             continuar = QMessageBox.critical(
-                self, "Alta Producto", f"{e}", QMessageBox.Ok
+                self, "Consultar Producto", f"{e}", QMessageBox.Ok
             )
             return
 
-        continuar = QMessageBox.information(
-            self,
-            "Consultar Producto",
-            f"Se han encontrado {len(lista_prod)} productos.",
-            QMessageBox.Ok,
-        )
+        if not first_visit:
+            continuar = QMessageBox.information(
+                self,
+                "Consultar Producto",
+                f"Se han encontrado {len(lista_prod)} productos.",
+                QMessageBox.Ok,
+            )
 
     def borrar(
         self,
